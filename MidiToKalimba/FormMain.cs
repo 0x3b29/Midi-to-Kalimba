@@ -44,12 +44,18 @@ namespace MidiToKalimba
             int baseOctave = (int)nudBaseOctave.Value;
             float speed = (float)nudSpeed.Value;
 
+            int goodNotesCounter = 0;
             int unplayableCounter = 0;
             int tooHighCounter = 0;
             int tooLowCounter = 0;
 
             String kalimbaString = "";
+            String notesArrayString = "";
+            String offsetArrayString = "";
+
             int kalimbaMappedNote;
+
+            bool useArrayNotation = cbArrayNotation.Checked;
 
             foreach (var trackChunk in midiFile.GetTrackChunks())
             {
@@ -77,7 +83,28 @@ namespace MidiToKalimba
                         }
                         else
                         {
-                            kalimbaString += kalimbaMappedNote + ((previousNoteOctave - baseOctave) * 7) + "," + ((note.Time - previousNoteTime) * speed)  + ";";
+                            goodNotesCounter++;
+
+                            int kalimbaNote = (kalimbaMappedNote + ((previousNoteOctave - baseOctave) * 7));
+                            int offset = Convert.ToInt32(Math.Round((note.Time - previousNoteTime) * speed));
+
+                            if (useArrayNotation)
+                            {
+                                if (notesArrayString == "")
+                                {
+                                    notesArrayString = kalimbaNote.ToString();
+                                    offsetArrayString = offset.ToString();
+                                }
+                                else
+                                {
+                                    notesArrayString += ", " + kalimbaNote.ToString();
+                                    offsetArrayString += ", " + offset.ToString();
+                                }
+                            }
+                            else
+                            {
+                                kalimbaString += kalimbaNote + "," + offset + ";";
+                            }
                         }
                     }
 
@@ -88,6 +115,7 @@ namespace MidiToKalimba
             }
 
             kalimbaMappedNote = getKalimbaNote(previousNoteName);
+            int lastKalimbaNote = (kalimbaMappedNote + ((previousNoteOctave - baseOctave) * 7));
 
             if (kalimbaMappedNote == 0)
             {
@@ -103,10 +131,38 @@ namespace MidiToKalimba
             }
             else
             {
-                kalimbaString += kalimbaMappedNote + ((previousNoteOctave - baseOctave) * 7) + "," + 0 + ";";
+                goodNotesCounter++;
+
+                if (useArrayNotation)
+                {
+                    if (notesArrayString == "")
+                    {
+                        notesArrayString = lastKalimbaNote.ToString();
+                        offsetArrayString = "0";
+                    }
+                    else
+                    {
+                        notesArrayString += ", " + lastKalimbaNote.ToString();
+                        offsetArrayString += ", " + 0;
+                    }
+                }
+                else
+                {
+                    kalimbaString += lastKalimbaNote + "," + 0 + ";";
+                }
             }
 
-            tbConvertedMidi.Text = kalimbaString;
+            if (useArrayNotation)
+            {
+                tbConvertedMidi.Text = "unsigned char notes[" + goodNotesCounter + "] = {" + notesArrayString + "};" + Environment.NewLine +
+                    "unsigned short int offsets[" + goodNotesCounter + "] = {" + offsetArrayString + "};";
+            }
+            else
+            {
+                tbConvertedMidi.Text = kalimbaString;
+            }
+
+            lblGoodNotes.Text = "Good Notes: " + goodNotesCounter;
             lblUnplayableCounter.Text = "Unplayable Notes: " + unplayableCounter;
             lblTooLowNotes.Text = "Too Low Notes: " + tooLowCounter;
             lblTooHighNotes.Text = "Too High Notes: " + tooHighCounter;

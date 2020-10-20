@@ -42,6 +42,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.cbArrayNotation = new System.Windows.Forms.CheckBox();
+            this.lblGoodNotes = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudBaseOctave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).BeginInit();
             this.SuspendLayout();
@@ -49,7 +51,7 @@
             // btnConvert
             // 
             this.btnConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConvert.Location = new System.Drawing.Point(713, 600);
+            this.btnConvert.Location = new System.Drawing.Point(713, 616);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(138, 52);
             this.btnConvert.TabIndex = 0;
@@ -86,7 +88,7 @@
             // 
             this.lblTooHighNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTooHighNotes.AutoSize = true;
-            this.lblTooHighNotes.Location = new System.Drawing.Point(13, 648);
+            this.lblTooHighNotes.Location = new System.Drawing.Point(193, 626);
             this.lblTooHighNotes.Name = "lblTooHighNotes";
             this.lblTooHighNotes.Size = new System.Drawing.Size(131, 20);
             this.lblTooHighNotes.TabIndex = 3;
@@ -96,7 +98,7 @@
             // 
             this.lblTooLowNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTooLowNotes.AutoSize = true;
-            this.lblTooLowNotes.Location = new System.Drawing.Point(13, 616);
+            this.lblTooLowNotes.Location = new System.Drawing.Point(193, 592);
             this.lblTooLowNotes.Name = "lblTooLowNotes";
             this.lblTooLowNotes.Size = new System.Drawing.Size(127, 20);
             this.lblTooLowNotes.TabIndex = 4;
@@ -106,7 +108,7 @@
             // 
             this.lblUnplayableCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblUnplayableCounter.AutoSize = true;
-            this.lblUnplayableCounter.Location = new System.Drawing.Point(13, 582);
+            this.lblUnplayableCounter.Location = new System.Drawing.Point(9, 626);
             this.lblUnplayableCounter.Name = "lblUnplayableCounter";
             this.lblUnplayableCounter.Size = new System.Drawing.Size(146, 20);
             this.lblUnplayableCounter.TabIndex = 5;
@@ -199,11 +201,34 @@
             this.label5.TabIndex = 13;
             this.label5.Text = "Path:";
             // 
+            // cbArrayNotation
+            // 
+            this.cbArrayNotation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbArrayNotation.AutoSize = true;
+            this.cbArrayNotation.Location = new System.Drawing.Point(713, 581);
+            this.cbArrayNotation.Name = "cbArrayNotation";
+            this.cbArrayNotation.Size = new System.Drawing.Size(136, 24);
+            this.cbArrayNotation.TabIndex = 14;
+            this.cbArrayNotation.Text = "Array Notation";
+            this.cbArrayNotation.UseVisualStyleBackColor = true;
+            // 
+            // lblGoodNotes
+            // 
+            this.lblGoodNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblGoodNotes.AutoSize = true;
+            this.lblGoodNotes.Location = new System.Drawing.Point(9, 592);
+            this.lblGoodNotes.Name = "lblGoodNotes";
+            this.lblGoodNotes.Size = new System.Drawing.Size(107, 20);
+            this.lblGoodNotes.TabIndex = 15;
+            this.lblGoodNotes.Text = "Good Notes: /";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(863, 680);
+            this.Controls.Add(this.lblGoodNotes);
+            this.Controls.Add(this.cbArrayNotation);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.nudSpeed);
@@ -242,6 +267,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox cbArrayNotation;
+        private System.Windows.Forms.Label lblGoodNotes;
     }
 }
 
