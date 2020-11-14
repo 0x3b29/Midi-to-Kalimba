@@ -17,6 +17,7 @@ namespace MidiToKalimba
     public partial class FormMain : Form
     {
         bool useArrayNotation;
+        bool wrapNotes;
 
         int goodNotesCounter;
         int unplayableCounter;
@@ -62,6 +63,7 @@ namespace MidiToKalimba
             offsetArrayString = "";
             
             useArrayNotation = cbArrayNotation.Checked;
+            wrapNotes = cbWrapNotes.Checked;
 
             foreach (var trackChunk in midiFile.GetTrackChunks())
             {
@@ -103,39 +105,75 @@ namespace MidiToKalimba
             if (kalimbaMappedNote == 0)
             {
                 unplayableCounter++;
+
+                // We can never make unplayable notes work because of how a Kalimba is arranged
+                return;
             }
-            else if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
+
+            if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
             {
                 tooLowCounter++;
-            }
-            else if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) > 17)
-            {
-                tooHighCounter++;
-            }
-            else
-            {
-                goodNotesCounter++;
 
-                int kalimbaNote = (kalimbaMappedNote + ((noteOctave - baseOctave) * 7));
-                int offset = Convert.ToInt32(Math.Round((offsetToNextNote) * speed));
-
-                if (useArrayNotation)
+                if (wrapNotes)
                 {
-                    if (notesArrayString == "")
+                    // Adjust the octave of the note downwards until the note is in the playable range
+                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
                     {
-                        notesArrayString = kalimbaNote.ToString();
-                        offsetArrayString = offset.ToString();
-                    }
-                    else
-                    {
-                        notesArrayString += ", " + kalimbaNote.ToString();
-                        offsetArrayString += ", " + offset.ToString();
+                        noteOctave++;
                     }
                 }
                 else
                 {
-                    kalimbaString += kalimbaNote + "," + offset + ";";
+                    // If we dont wrap the notes around, we are done with this note
+                    return;
                 }
+            }
+            else if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) > 17)
+            {
+                tooHighCounter++;
+
+                if (wrapNotes)
+                {
+                    // Adjust the octave of the note upwards until the note is in the playable range
+                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
+                    {
+                        noteOctave--;
+                    }
+                }
+                else
+                {
+                    // If we dont wrap the notes around, we are done with this note
+                    return;
+                }
+            }
+            else
+            {
+                goodNotesCounter++;
+            }
+
+            // If we got here, we either had a good note, or we wrapped a note that was too low or too high
+
+            int kalimbaNote = (kalimbaMappedNote + ((noteOctave - baseOctave) * 7));
+            int offset = Convert.ToInt32(Math.Round((offsetToNextNote) * speed));
+
+            if (useArrayNotation)
+            {
+                // If the array notation is used, we arrange the note and the offset in a way that they can be used create valid c/c++ arrays
+                if (notesArrayString == "")
+                {
+                    notesArrayString = kalimbaNote.ToString();
+                    offsetArrayString = offset.ToString();
+                }
+                else
+                {
+                    notesArrayString += ", " + kalimbaNote.ToString();
+                    offsetArrayString += ", " + offset.ToString();
+                }
+            }
+            else
+            {
+                // If we dont use the array notation, the note and the offset is comma seperated in a way that we can send it via the serial interface to the arduino
+                kalimbaString += kalimbaNote + "," + offset + ";";
             }
         }
 
