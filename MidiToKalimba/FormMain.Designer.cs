@@ -44,6 +44,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbArrayNotation = new System.Windows.Forms.CheckBox();
             this.lblGoodNotes = new System.Windows.Forms.Label();
+            this.cbWrapNotes = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudBaseOctave)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).BeginInit();
             this.SuspendLayout();
@@ -51,7 +52,7 @@
             // btnConvert
             // 
             this.btnConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConvert.Location = new System.Drawing.Point(713, 616);
+            this.btnConvert.Location = new System.Drawing.Point(713, 632);
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Size = new System.Drawing.Size(138, 52);
             this.btnConvert.TabIndex = 0;
@@ -88,7 +89,8 @@
             // 
             this.lblTooHighNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTooHighNotes.AutoSize = true;
-            this.lblTooHighNotes.Location = new System.Drawing.Point(193, 626);
+            this.lblTooHighNotes.Location = new System.Drawing.Point(9, 664);
+            this.lblTooHighNotes.Margin = new System.Windows.Forms.Padding(6);
             this.lblTooHighNotes.Name = "lblTooHighNotes";
             this.lblTooHighNotes.Size = new System.Drawing.Size(131, 20);
             this.lblTooHighNotes.TabIndex = 3;
@@ -98,7 +100,8 @@
             // 
             this.lblTooLowNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblTooLowNotes.AutoSize = true;
-            this.lblTooLowNotes.Location = new System.Drawing.Point(193, 592);
+            this.lblTooLowNotes.Location = new System.Drawing.Point(8, 632);
+            this.lblTooLowNotes.Margin = new System.Windows.Forms.Padding(6);
             this.lblTooLowNotes.Name = "lblTooLowNotes";
             this.lblTooLowNotes.Size = new System.Drawing.Size(127, 20);
             this.lblTooLowNotes.TabIndex = 4;
@@ -108,7 +111,8 @@
             // 
             this.lblUnplayableCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblUnplayableCounter.AutoSize = true;
-            this.lblUnplayableCounter.Location = new System.Drawing.Point(9, 626);
+            this.lblUnplayableCounter.Location = new System.Drawing.Point(9, 600);
+            this.lblUnplayableCounter.Margin = new System.Windows.Forms.Padding(6);
             this.lblUnplayableCounter.Name = "lblUnplayableCounter";
             this.lblUnplayableCounter.Size = new System.Drawing.Size(146, 20);
             this.lblUnplayableCounter.TabIndex = 5;
@@ -122,14 +126,14 @@
             this.tbConvertedMidi.Location = new System.Drawing.Point(12, 142);
             this.tbConvertedMidi.Multiline = true;
             this.tbConvertedMidi.Name = "tbConvertedMidi";
-            this.tbConvertedMidi.Size = new System.Drawing.Size(838, 423);
+            this.tbConvertedMidi.Size = new System.Drawing.Size(838, 410);
             this.tbConvertedMidi.TabIndex = 6;
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(435, 632);
+            this.label2.Location = new System.Drawing.Point(419, 631);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(108, 20);
             this.label2.TabIndex = 8;
@@ -138,7 +142,7 @@
             // nudBaseOctave
             // 
             this.nudBaseOctave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.nudBaseOctave.Location = new System.Drawing.Point(566, 630);
+            this.nudBaseOctave.Location = new System.Drawing.Point(550, 629);
             this.nudBaseOctave.Maximum = new decimal(new int[] {
             10,
             0,
@@ -162,7 +166,7 @@
             0,
             0,
             131072});
-            this.nudSpeed.Location = new System.Drawing.Point(566, 590);
+            this.nudSpeed.Location = new System.Drawing.Point(550, 594);
             this.nudSpeed.Name = "nudSpeed";
             this.nudSpeed.Size = new System.Drawing.Size(120, 26);
             this.nudSpeed.TabIndex = 11;
@@ -176,7 +180,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(435, 592);
+            this.label3.Location = new System.Drawing.Point(419, 596);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(131, 20);
             this.label3.TabIndex = 10;
@@ -205,7 +209,7 @@
             // 
             this.cbArrayNotation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cbArrayNotation.AutoSize = true;
-            this.cbArrayNotation.Location = new System.Drawing.Point(713, 581);
+            this.cbArrayNotation.Location = new System.Drawing.Point(216, 596);
             this.cbArrayNotation.Name = "cbArrayNotation";
             this.cbArrayNotation.Size = new System.Drawing.Size(136, 24);
             this.cbArrayNotation.TabIndex = 14;
@@ -216,17 +220,30 @@
             // 
             this.lblGoodNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblGoodNotes.AutoSize = true;
-            this.lblGoodNotes.Location = new System.Drawing.Point(9, 592);
+            this.lblGoodNotes.Location = new System.Drawing.Point(8, 568);
+            this.lblGoodNotes.Margin = new System.Windows.Forms.Padding(6);
             this.lblGoodNotes.Name = "lblGoodNotes";
             this.lblGoodNotes.Size = new System.Drawing.Size(107, 20);
             this.lblGoodNotes.TabIndex = 15;
             this.lblGoodNotes.Text = "Good Notes: /";
             // 
+            // cbWrapNotes
+            // 
+            this.cbWrapNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbWrapNotes.AutoSize = true;
+            this.cbWrapNotes.Location = new System.Drawing.Point(216, 633);
+            this.cbWrapNotes.Name = "cbWrapNotes";
+            this.cbWrapNotes.Size = new System.Drawing.Size(119, 24);
+            this.cbWrapNotes.TabIndex = 16;
+            this.cbWrapNotes.Text = "Wrap Notes";
+            this.cbWrapNotes.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(863, 680);
+            this.ClientSize = new System.Drawing.Size(863, 702);
+            this.Controls.Add(this.cbWrapNotes);
             this.Controls.Add(this.lblGoodNotes);
             this.Controls.Add(this.cbArrayNotation);
             this.Controls.Add(this.label5);
@@ -269,6 +286,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox cbArrayNotation;
         private System.Windows.Forms.Label lblGoodNotes;
+        private System.Windows.Forms.CheckBox cbWrapNotes;
     }
 }
 
