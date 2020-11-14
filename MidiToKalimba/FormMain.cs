@@ -61,7 +61,7 @@ namespace MidiToKalimba
             notesArrayString = "";
             offsetArrayString = "";
             
-            bool useArrayNotation = cbArrayNotation.Checked;
+            useArrayNotation = cbArrayNotation.Checked;
 
             foreach (var trackChunk in midiFile.GetTrackChunks())
             {
