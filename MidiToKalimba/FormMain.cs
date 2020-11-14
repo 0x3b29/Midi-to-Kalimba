@@ -1,4 +1,4 @@
-﻿using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Devices;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.MusicTheory;
@@ -116,7 +116,7 @@ namespace MidiToKalimba
 
                 if (wrapNotes)
                 {
-                    // Adjust the octave of the note downwards until the note is in the playable range
+                    // Adjust the octave of the note upwards until the note is in the playable range
                     while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
                     {
                         noteOctave++;
@@ -134,8 +134,8 @@ namespace MidiToKalimba
 
                 if (wrapNotes)
                 {
-                    // Adjust the octave of the note upwards until the note is in the playable range
-                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
+                    // Adjust the octave of the note downwards until the note is in the playable range
+                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) > 17)
                     {
                         noteOctave--;
                     }
