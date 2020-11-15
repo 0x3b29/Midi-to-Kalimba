@@ -1,4 +1,4 @@
-using Melanchall.DryWetMidi.Core;
+﻿using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Devices;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.MusicTheory;
@@ -101,12 +101,16 @@ namespace MidiToKalimba
         private void processNote(NoteName noteName, int noteOctave, long offsetToNextNote)
         {
             int kalimbaMappedNote = getKalimbaNote(noteName);
+            int offset = Convert.ToInt32(Math.Round((offsetToNextNote) * speed));
 
             if (kalimbaMappedNote == 0)
             {
                 unplayableCounter++;
 
                 // We can never make unplayable notes work because of how a Kalimba is arranged
+                // We still need to add a placeholder note to the output because otherwise the timing will get mesed up
+
+                addNoteToOutput(0, offset);
                 return;
             }
 
@@ -116,15 +120,22 @@ namespace MidiToKalimba
 
                 if (wrapNotes)
                 {
+                    Console.WriteLine("kalimbaMappedNote(" + kalimbaMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (kalimbaMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
+
                     // Adjust the octave of the note upwards until the note is in the playable range
                     while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
                     {
+
                         noteOctave++;
+
+                        Console.WriteLine("kalimbaMappedNote(" + kalimbaMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (kalimbaMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
                     }
                 }
                 else
                 {
                     // If we dont wrap the notes around, we are done with this note
+                    // We still need to add a placeholder note to the output because otherwise the timing will get mesed up
+                    addNoteToOutput(0, offset);
                     return;
                 }
             }
@@ -143,6 +154,8 @@ namespace MidiToKalimba
                 else
                 {
                     // If we dont wrap the notes around, we are done with this note
+                    // We still need to add a placeholder note to the output because otherwise the timing will get mesed up
+                    addNoteToOutput(0, offset);
                     return;
                 }
             }
@@ -154,26 +167,29 @@ namespace MidiToKalimba
             // If we got here, we either had a good note, or we wrapped a note that was too low or too high
 
             int kalimbaNote = (kalimbaMappedNote + ((noteOctave - baseOctave) * 7));
-            int offset = Convert.ToInt32(Math.Round((offsetToNextNote) * speed));
+            addNoteToOutput(kalimbaNote, offset);
+        }
 
+        public void addNoteToOutput(int note, int offset)
+        {
             if (useArrayNotation)
             {
                 // If the array notation is used, we arrange the note and the offset in a way that they can be used create valid c/c++ arrays
                 if (notesArrayString == "")
                 {
-                    notesArrayString = kalimbaNote.ToString();
+                    notesArrayString = note.ToString();
                     offsetArrayString = offset.ToString();
                 }
                 else
                 {
-                    notesArrayString += ", " + kalimbaNote.ToString();
+                    notesArrayString += ", " + note.ToString();
                     offsetArrayString += ", " + offset.ToString();
                 }
             }
             else
             {
                 // If we dont use the array notation, the note and the offset is comma seperated in a way that we can send it via the serial interface to the arduino
-                kalimbaString += kalimbaNote + "," + offset + ";";
+                kalimbaString += note + "," + offset + ";";
             }
         }
 
