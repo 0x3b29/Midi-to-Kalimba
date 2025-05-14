@@ -1,18 +1,11 @@
 ﻿using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Devices;
 using Melanchall.DryWetMidi.Interaction;
 using Melanchall.DryWetMidi.MusicTheory;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MidiToKalimba
+namespace MidiToGrips
 {
     public partial class FormMain : Form
     {
@@ -20,11 +13,10 @@ namespace MidiToKalimba
         bool wrapNotes;
 
         int goodNotesCounter;
-        int unplayableCounter;
         int tooHighCounter;
         int tooLowCounter;
 
-        String kalimbaString;
+        String gripsString;
         String notesArrayString;
         String offsetArrayString;
 
@@ -52,13 +44,13 @@ namespace MidiToKalimba
 
             baseOctave = (int)nudBaseOctave.Value;
             speed = (float)nudSpeed.Value;
+            var tempoMap = midiFile.GetTempoMap();
 
             goodNotesCounter = 0;
-            unplayableCounter = 0;
             tooHighCounter = 0;
             tooLowCounter = 0;
 
-            kalimbaString = "";
+            gripsString = "";
             notesArrayString = "";
             offsetArrayString = "";
             
@@ -71,28 +63,26 @@ namespace MidiToKalimba
 
                 for (int i = 0; i < notesArray.Length; i++)
                 {
-                    if (i < notesArray.Length -1)
-                    {
-                        processNote(notesArray[i].NoteName, notesArray[i].Octave, notesArray[i + 1].Time - notesArray[i].Time);
-                    }
-                    else
-                    {
-                        processNote(notesArray[i].NoteName, notesArray[i].Octave, 0);
-                    }
+                    MetricTimeSpan metricTime = TimeConverter.ConvertTo<MetricTimeSpan>(
+                                          notesArray[i].Time,
+                                          tempoMap);
+
+                    long time = metricTime.Minutes * 60 * 1000 + metricTime.Seconds * 1000 + metricTime.Milliseconds;
+
+                    processNote(notesArray[i].NoteName, notesArray[i].Octave, time);
                 }
                 
                 if (useArrayNotation)
                 {
-                    tbConvertedMidi.Text = "unsigned char notes[" + goodNotesCounter + "] = {" + notesArrayString + "};" + Environment.NewLine +
-                        "unsigned short int offsets[" + goodNotesCounter + "] = {" + offsetArrayString + "};";
+                    tbConvertedMidi.Text = "int notes[" + goodNotesCounter + "] = {" + notesArrayString + "};" + Environment.NewLine +
+                        "int offsets[" + goodNotesCounter + "] = {" + offsetArrayString + "};";
                 }
                 else
                 {
-                    tbConvertedMidi.Text = kalimbaString;
+                    tbConvertedMidi.Text = gripsString;
                 }
 
                 lblGoodNotes.Text = "Good Notes: " + goodNotesCounter;
-                lblUnplayableCounter.Text = "Unplayable Notes: " + unplayableCounter;
                 lblTooLowNotes.Text = "Too Low Notes: " + tooLowCounter;
                 lblTooHighNotes.Text = "Too High Notes: " + tooHighCounter;
             }
@@ -100,35 +90,24 @@ namespace MidiToKalimba
 
         private void processNote(NoteName noteName, int noteOctave, long offsetToNextNote)
         {
-            int kalimbaMappedNote = getKalimbaNote(noteName);
+            int gripsMappedNote = getGripsNote(noteName);
             int offset = Convert.ToInt32(Math.Round((offsetToNextNote) * speed));
 
-            if (kalimbaMappedNote == 0)
-            {
-                unplayableCounter++;
-
-                // We can never make unplayable notes work because of how a Kalimba is arranged
-                // We still need to add a placeholder note to the output because otherwise the timing will get mesed up
-
-                addNoteToOutput(0, offset);
-                return;
-            }
-
-            if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
+            if (gripsMappedNote + ((noteOctave - baseOctave) * 7) < 1)
             {
                 tooLowCounter++;
 
                 if (wrapNotes)
                 {
-                    Console.WriteLine("kalimbaMappedNote(" + kalimbaMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (kalimbaMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
+                    Console.WriteLine("gripsMappedNote(" + gripsMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (gripsMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
 
                     // Adjust the octave of the note upwards until the note is in the playable range
-                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) < 1)
+                    while (gripsMappedNote + ((noteOctave - baseOctave) * 7) < 1)
                     {
 
                         noteOctave++;
 
-                        Console.WriteLine("kalimbaMappedNote(" + kalimbaMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (kalimbaMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
+                        Console.WriteLine("gripsMappedNote(" + gripsMappedNote + ") + ((noteOctave(" + noteOctave + ") - baseOctave(" + baseOctave + ")) * 7)(" + (gripsMappedNote + ((noteOctave - baseOctave) * 7)) + ") < 1");
                     }
                 }
                 else
@@ -139,14 +118,14 @@ namespace MidiToKalimba
                     return;
                 }
             }
-            else if (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) > 17)
+            else if (gripsMappedNote + ((noteOctave - baseOctave) * 7) > 17)
             {
                 tooHighCounter++;
 
                 if (wrapNotes)
                 {
                     // Adjust the octave of the note downwards until the note is in the playable range
-                    while (kalimbaMappedNote + ((noteOctave - baseOctave) * 7) > 17)
+                    while (gripsMappedNote + ((noteOctave - baseOctave) * 7) > 17)
                     {
                         noteOctave--;
                     }
@@ -166,8 +145,8 @@ namespace MidiToKalimba
 
             // If we got here, we either had a good note, or we wrapped a note that was too low or too high
 
-            int kalimbaNote = (kalimbaMappedNote + ((noteOctave - baseOctave) * 7));
-            addNoteToOutput(kalimbaNote, offset);
+            int gripsNote = (gripsMappedNote + ((noteOctave - baseOctave) * 7));
+            addNoteToOutput(gripsNote, offset);
         }
 
         public void addNoteToOutput(int note, int offset)
@@ -189,22 +168,26 @@ namespace MidiToKalimba
             else
             {
                 // If we dont use the array notation, the note and the offset is comma seperated in a way that we can send it via the serial interface to the arduino
-                kalimbaString += note + "," + offset + ";";
+                gripsString += note + "," + offset + ";";
             }
         }
 
-        private int getKalimbaNote(NoteName noteName)
+        private int getGripsNote(NoteName noteName)
         {
             switch (noteName)
             {
-                case NoteName.C: return 1;
-                case NoteName.D: return 2;
-                case NoteName.E: return 3;
-                case NoteName.F: return 4;
-                case NoteName.G: return 5;
-                case NoteName.A: return 6;
-                case NoteName.B: return 7;
-
+                case NoteName.C:        return 1;
+                case NoteName.CSharp:   return 2;
+                case NoteName.D:        return 3;
+                case NoteName.DSharp:   return 4;
+                case NoteName.E:        return 5;
+                case NoteName.F:        return 5;
+                case NoteName.FSharp:   return 7;
+                case NoteName.G:        return 8;
+                case NoteName.GSharp:   return 9;
+                case NoteName.A:        return 10;
+                case NoteName.ASharp:   return 11;
+                case NoteName.B:        return 12;
                 default: return 0;
             }
         }
@@ -215,6 +198,11 @@ namespace MidiToKalimba
             {
                 tbFilePath.Text = openFileDialog1.FileName;
             }
+        }
+
+        private void nudSpeed_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

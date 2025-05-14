@@ -1,4 +1,4 @@
-﻿namespace MidiToKalimba
+﻿namespace MidiToGrips
 {
     partial class FormMain
     {
@@ -152,7 +152,7 @@
             this.nudBaseOctave.Size = new System.Drawing.Size(120, 26);
             this.nudBaseOctave.TabIndex = 9;
             this.nudBaseOctave.Value = new decimal(new int[] {
-            5,
+            2,
             0,
             0,
             0});
@@ -171,10 +171,11 @@
             this.nudSpeed.Size = new System.Drawing.Size(120, 26);
             this.nudSpeed.TabIndex = 11;
             this.nudSpeed.Value = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
+            this.nudSpeed.ValueChanged += new System.EventHandler(this.nudSpeed_ValueChanged);
             // 
             // label3
             // 
@@ -192,9 +193,9 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 26F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(12, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(644, 59);
+            this.label4.Size = new System.Drawing.Size(578, 59);
             this.label4.TabIndex = 12;
-            this.label4.Text = "Midi to Kalimba Converter";
+            this.label4.Text = "Midi to Grips Converter";
             // 
             // label5
             // 
@@ -260,7 +261,7 @@
             this.Controls.Add(this.tbFilePath);
             this.Controls.Add(this.btnConvert);
             this.Name = "FormMain";
-            this.Text = "Midi to Kalimba Converter 0.1";
+            this.Text = "Midi to Grips Converter 0.1";
             ((System.ComponentModel.ISupportInitialize)(this.nudBaseOctave)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).EndInit();
             this.ResumeLayout(false);
