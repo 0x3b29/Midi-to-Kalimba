@@ -171,7 +171,7 @@
             this.nudSpeed.Size = new System.Drawing.Size(120, 26);
             this.nudSpeed.TabIndex = 11;
             this.nudSpeed.Value = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});
